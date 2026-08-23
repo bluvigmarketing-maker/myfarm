@@ -16,12 +16,12 @@ Status legend: ☐ Not started · 🔄 In progress · ✅ Done
 ---
 
 ## Milestone 1 — Accounts & Farmer Onboarding
-- ☐ Sign up / log in (email or phone)
-- ☐ User profile page (avatar, bio)
-- ☐ "Become a Model Farmer" flow → create FarmerProfile
-- ☐ Create/edit Farm Profile (name, description, photos, tags)
-- ☐ Google Maps link input + validation + lat/lng parse (best-effort) + embed preview
-- ☐ Open/Closed toggle + weekly schedule + blackout dates
+- 🔄 Sign up / log in — email + password done (`/signup`, `/login`, Supabase auth); phone login not yet built
+- ☐ User profile page (avatar, bio) — not started; users get a row via the `handle_new_user` trigger but there's no edit UI yet
+- ✅ "Become a Model Farmer" flow → create FarmerProfile
+- 🔄 Create/edit Farm Profile (name, description, photos, tags) — text fields done; photo upload (Supabase Storage) not yet built
+- ✅ Google Maps link input + validation + lat/lng parse (best-effort) + embed preview
+- 🔄 Open/Closed toggle + weekly schedule + blackout dates — toggle and weekly schedule done; blackout dates not yet built
 
 **Goal:** a farmer can register and publish a complete farm profile.
 
@@ -107,3 +107,5 @@ Status legend: ☐ Not started · 🔄 In progress · ✅ Done
 |---|---|
 | 2026-08-23 | Initial features, design, and milestone docs created. |
 | 2026-08-23 | Milestone 0 scaffolding: Next.js 16 + Tailwind app, Supabase client/server/proxy helpers, DAL auth pattern, DB schema + RLS migration, WhatsApp & Google Maps link utilities, CI workflow. |
+| 2026-08-23 | Repo moved to github.com/bluvigmarketing-maker/myfarm (Vercel-linked account); Supabase project connected and migration verified live. |
+| 2026-08-23 | Milestone 1 (partial): email/password signup+login, email confirmation callback, dashboard with DAL-gated auth, "Become a Model Farmer" flow, farm create/edit forms (Google Maps link + embed, tags, weekly schedule, open/closed toggle). Verified end-to-end against the live Supabase project with a real dev-server run (signup confirmed working, hit Supabase's free-tier email rate limit after 2 test signups — expected, not a bug). |
