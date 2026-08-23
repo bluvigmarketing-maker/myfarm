@@ -16,7 +16,7 @@ Status legend: ☐ Not started · 🔄 In progress · ✅ Done
 ---
 
 ## Milestone 1 — Accounts & Farmer Onboarding
-- 🔄 Sign up / log in — email + password done (`/signup`, `/login`, Supabase auth); phone login not yet built
+- 🔄 Sign up / log in — email + password done (`/signup`, `/login`, Supabase auth), direct registration with a visible-password toggle; phone login not yet built
 - ☐ User profile page (avatar, bio) — not started; users get a row via the `handle_new_user` trigger but there's no edit UI yet
 - ✅ "Become a Model Farmer" flow → create FarmerProfile
 - 🔄 Create/edit Farm Profile (name, description, photos, tags) — text fields done; photo upload (Supabase Storage) not yet built
@@ -111,3 +111,4 @@ Status legend: ☐ Not started · 🔄 In progress · ✅ Done
 | 2026-08-23 | Milestone 1 (partial): email/password signup+login, email confirmation callback, dashboard with DAL-gated auth, "Become a Model Farmer" flow, farm create/edit forms (Google Maps link + embed, tags, weekly schedule, open/closed toggle). Verified end-to-end against the live Supabase project with a real dev-server run (signup confirmed working, hit Supabase's free-tier email rate limit after 2 test signups — expected, not a bug). |
 | 2026-08-23 | Fixed reported `/farms` 404 (page was linked but never built). Added Milestone 2 start: public `/farms` search + `/farms/[id]` detail page with WhatsApp booking form. Added shared SiteHeader/SiteFooter across public pages under a `(marketing)` route group. Required a WhatsApp number when becoming a Model Farmer, since the booking form needs it. |
 | 2026-08-23 | Applied a full design system across the app (see DESIGN.md §4.1), adapted from a reference `DESIGN-SYSTEM.md` with navy→green, gold→brown ("for soil"). Added shadcn/ui (base-nova), Framer Motion, lucide-react, Playfair Display headings, a green/brown color token system, `Container`/`SectionHeading`/`PageHero`/`AnimatedSection` primitives, `.btn-earthy`/`.soil-line` utilities, a dark-green `PageHero` + `SiteFooter`, and a mobile nav Sheet drawer. Recolored/rebuilt every existing page and component (home, farms, farm detail, auth, dashboard). Verified with a real dev-server run — build, lint, and screenshots of home/farms/login/mobile-menu all clean. |
+| 2026-08-23 | Signup redirects straight to `/dashboard` when Supabase returns a session immediately (i.e. once "Confirm email" is turned off in the Supabase dashboard — that toggle can't be set via the app's anon key, so it's a manual one-time step); falls back to the check-email flow otherwise so nothing breaks if confirmations get re-enabled later. Added a reusable `PasswordInput` (eye-icon show/hide toggle) used on both login and signup. Verified the toggle with a real dev-server run/screenshot. |

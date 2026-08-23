@@ -13,7 +13,7 @@ export async function signup(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: { data: { name } },
@@ -21,6 +21,11 @@ export async function signup(formData: FormData) {
 
   if (error) {
     redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+  }
+
+  // With email confirmations disabled, signUp returns a session immediately.
+  if (data.session) {
+    redirect("/dashboard");
   }
 
   redirect("/signup/check-email");

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { PasswordInput } from "@/components/password-input";
 import { signup } from "../actions";
 
 const inputClass =
@@ -32,7 +33,7 @@ export default async function SignupPage({
         </label>
         <label className={labelClass}>
           Password
-          <input type="password" name="password" required minLength={6} className={inputClass} />
+          <PasswordInput name="password" required minLength={6} className={inputClass} />
         </label>
         <Button type="submit" className="btn-earthy soil-line font-semibold">
           Sign up
