@@ -35,6 +35,13 @@ export async function becomeFarmer(formData: FormData) {
 
   const yearsExperience = Number(formData.get("years_experience") ?? 0) || null;
   const specialties = splitTags(formData.get("specialties"));
+  const whatsappNumber = String(formData.get("whatsapp_number") ?? "").trim();
+
+  if (!whatsappNumber) {
+    redirect(`/dashboard?error=${encodeURIComponent("A WhatsApp number is required so visitors can book visits.")}`);
+  }
+
+  await supabase.from("users").update({ whatsapp_number: whatsappNumber }).eq("id", user.id);
 
   const { error } = await supabase.from("farmer_profiles").insert({
     user_id: user.id,

@@ -28,8 +28,8 @@ Status legend: ☐ Not started · 🔄 In progress · ✅ Done
 ---
 
 ## Milestone 2 — Discovery
-- ☐ Public Farm Profile page (About / Posts / Shop / Reviews tabs)
-- ☐ Search page with filters (location text, tags, open-now, price)
+- 🔄 Public Farm Profile page (About / Posts / Shop / Reviews tabs) — About tab done (`/farms/[id]`: description, tags, weekly hours, Google Maps embed, WhatsApp booking form); Posts/Shop/Reviews tabs not yet built
+- 🔄 Search page with filters (location text, tags, open-now, price) — `/farms` has name search + open-now filter; tag/location/price filters not yet built
 - ☐ Sort (newest, rating — distance sort if lat/lng available)
 - ☐ Farm Posts feed (farmer can post text + photos; visitors can view)
 
@@ -109,3 +109,4 @@ Status legend: ☐ Not started · 🔄 In progress · ✅ Done
 | 2026-08-23 | Milestone 0 scaffolding: Next.js 16 + Tailwind app, Supabase client/server/proxy helpers, DAL auth pattern, DB schema + RLS migration, WhatsApp & Google Maps link utilities, CI workflow. |
 | 2026-08-23 | Repo moved to github.com/bluvigmarketing-maker/myfarm (Vercel-linked account); Supabase project connected and migration verified live. |
 | 2026-08-23 | Milestone 1 (partial): email/password signup+login, email confirmation callback, dashboard with DAL-gated auth, "Become a Model Farmer" flow, farm create/edit forms (Google Maps link + embed, tags, weekly schedule, open/closed toggle). Verified end-to-end against the live Supabase project with a real dev-server run (signup confirmed working, hit Supabase's free-tier email rate limit after 2 test signups — expected, not a bug). |
+| 2026-08-23 | Fixed reported `/farms` 404 (page was linked but never built). Added Milestone 2 start: public `/farms` search + `/farms/[id]` detail page with WhatsApp booking form. Added shared SiteHeader/SiteFooter across public pages under a `(marketing)` route group. Required a WhatsApp number when becoming a Model Farmer, since the booking form needs it. |
