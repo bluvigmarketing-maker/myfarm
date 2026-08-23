@@ -1,5 +1,6 @@
 import { createFarm } from "../../actions";
 import { Button } from "@/components/ui/button";
+import { FARM_CATEGORY_OPTIONS } from "@/lib/farm-category";
 
 const inputClass =
   "rounded-lg border border-green-200 px-3 py-2 outline-none focus:border-brown-500 focus:ring-2 focus:ring-brown-400/40";
@@ -24,6 +25,19 @@ export default async function NewFarmPage({
         <label className={labelClass}>
           Farm name
           <input type="text" name="name" required className={inputClass} />
+        </label>
+        <label className={labelClass}>
+          Category
+          <select name="category" required defaultValue="" className={inputClass}>
+            <option value="" disabled>
+              Select a category
+            </option>
+            {FARM_CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
         </label>
         <label className={labelClass}>
           Description

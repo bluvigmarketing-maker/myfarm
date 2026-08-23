@@ -1,7 +1,15 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { toEmbedSrc } from "@/lib/gmaps";
-import { updateFarm, setFarmStatus } from "../../../actions";
+import { FARM_CATEGORY_OPTIONS } from "@/lib/farm-category";
+import {
+  updateFarm,
+  setFarmStatus,
+  uploadFeaturedImage,
+  uploadFarmPhotos,
+  deleteFarmPhoto,
+} from "../../../actions";
 import { Button } from "@/components/ui/button";
 
 const DAYS = [
@@ -13,6 +21,8 @@ const DAYS = [
   { key: "sat", label: "Sat" },
   { key: "sun", label: "Sun" },
 ] as const;
+
+const MAX_FARM_PHOTOS = 5;
 
 type ScheduleEntry = { day_of_week: string; open_time: string; close_time: string };
 
@@ -37,17 +47,26 @@ export default async function EditFarmPage({
     notFound();
   }
 
+  const { data: photos } = await supabase
+    .from("farm_photos")
+    .select("id, url")
+    .eq("farm_id", id)
+    .order("sort_order", { ascending: true });
+
   const updateFarmWithId = updateFarm.bind(null, farm.id);
   const openFarm = setFarmStatus.bind(null, farm.id, "open");
   const closeFarm = setFarmStatus.bind(null, farm.id, "closed");
+  const uploadFeaturedImageWithId = uploadFeaturedImage.bind(null, farm.id);
+  const uploadFarmPhotosWithId = uploadFarmPhotos.bind(null, farm.id);
   const embedSrc = farm.gmaps_link ? toEmbedSrc(farm.gmaps_link) : null;
   const schedule: ScheduleEntry[] = Array.isArray(farm.schedule) ? farm.schedule : [];
   const scheduledDays = new Set(schedule.map((entry) => entry.day_of_week));
   const defaultOpenTime = schedule[0]?.open_time ?? "08:00";
   const defaultCloseTime = schedule[0]?.close_time ?? "16:00";
+  const photoCount = photos?.length ?? 0;
 
   return (
-    <div className="flex max-w-lg flex-col gap-6">
+    <div className="flex max-w-lg flex-col gap-8">
       <div className="flex items-center justify-between">
         <h1 className="font-heading text-xl font-semibold text-green-950">{farm.name}</h1>
         <form action={farm.status === "open" ? closeFarm : openFarm}>
@@ -66,6 +85,81 @@ export default async function EditFarmPage({
         <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-800">Saved.</p>
       )}
 
+      <div className="flex flex-col gap-3">
+        <h2 className="font-heading text-lg font-medium text-green-950">Featured Image</h2>
+        <p className="text-xs text-green-600">
+          Shown on the farm listing page (/farms). Recommended: a wide, bright photo.
+        </p>
+        {farm.cover_photo_url && (
+          <Image
+            src={farm.cover_photo_url}
+            alt="Featured"
+            width={400}
+            height={225}
+            unoptimized
+            className="h-40 w-full rounded-lg object-cover"
+          />
+        )}
+        <form action={uploadFeaturedImageWithId} className="flex items-center gap-3">
+          <input
+            type="file"
+            name="cover_photo"
+            accept="image/jpeg,image/png,image/webp"
+            required
+            className="text-sm text-green-800"
+          />
+          <Button type="submit" size="sm" className="btn-earthy soil-line font-semibold">
+            Upload
+          </Button>
+        </form>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <h2 className="font-heading text-lg font-medium text-green-950">
+          Gallery Photos ({photoCount}/{MAX_FARM_PHOTOS})
+        </h2>
+        {photos && photos.length > 0 && (
+          <div className="grid grid-cols-3 gap-2">
+            {photos.map((photo) => (
+              <div key={photo.id} className="relative">
+                <Image
+                  src={photo.url}
+                  alt=""
+                  width={150}
+                  height={150}
+                  unoptimized
+                  className="h-24 w-full rounded-lg object-cover"
+                />
+                <form action={deleteFarmPhoto.bind(null, farm.id, photo.id)}>
+                  <button
+                    type="submit"
+                    className="absolute top-1 right-1 rounded-full bg-black/60 px-1.5 py-0.5 text-xs text-white hover:bg-black/80"
+                    aria-label="Remove photo"
+                  >
+                    ✕
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        )}
+        {photoCount < MAX_FARM_PHOTOS && (
+          <form action={uploadFarmPhotosWithId} className="flex items-center gap-3">
+            <input
+              type="file"
+              name="photos"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              required
+              className="text-sm text-green-800"
+            />
+            <Button type="submit" size="sm" className="btn-earthy soil-line font-semibold">
+              Add Photos
+            </Button>
+          </form>
+        )}
+      </div>
+
       {embedSrc && (
         <iframe
           src={embedSrc}
@@ -82,11 +176,31 @@ export default async function EditFarmPage({
           <input type="text" name="name" defaultValue={farm.name} required className={inputClass} />
         </label>
         <label className={labelClass}>
+          Category
+          <select name="category" required defaultValue={farm.category} className={inputClass}>
+            {FARM_CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className={labelClass}>
           Description
           <textarea
             name="description"
             rows={4}
             defaultValue={farm.description ?? ""}
+            className={inputClass}
+          />
+        </label>
+        <label className={labelClass}>
+          Intro video link (Facebook, YouTube, or TikTok)
+          <input
+            type="url"
+            name="intro_video_url"
+            defaultValue={farm.intro_video_url ?? ""}
+            placeholder="https://youtube.com/watch?v=..."
             className={inputClass}
           />
         </label>
@@ -109,6 +223,36 @@ export default async function EditFarmPage({
             className={inputClass}
           />
         </label>
+
+        <fieldset className="flex flex-col gap-2">
+          <legend className="text-sm font-medium text-green-900">Pricing</legend>
+          <div className="flex gap-3">
+            <label className={labelClass}>
+              Agro-visit price
+              <input
+                type="number"
+                name="price_agro_visit"
+                min={0}
+                step="0.01"
+                defaultValue={farm.price_agro_visit ?? ""}
+                placeholder="Leave blank if free"
+                className={inputClass}
+              />
+            </label>
+            <label className={labelClass}>
+              Training price
+              <input
+                type="number"
+                name="price_training"
+                min={0}
+                step="0.01"
+                defaultValue={farm.price_training ?? ""}
+                placeholder="Leave blank if not offered"
+                className={inputClass}
+              />
+            </label>
+          </div>
+        </fieldset>
 
         <fieldset className="flex flex-col gap-2">
           <legend className="text-sm font-medium text-green-900">Weekly schedule</legend>

@@ -1,6 +1,9 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { toEmbedSrc } from "@/lib/gmaps";
+import { toYouTubeEmbedSrc } from "@/lib/video";
+import { farmCategoryLabel } from "@/lib/farm-category";
 import { WhatsAppBookingForm } from "@/components/whatsapp-booking-form";
 import { Container } from "@/components/container";
 import { PageHero } from "@/components/page-hero";
@@ -40,7 +43,14 @@ export default async function FarmDetailPage({
     notFound();
   }
 
+  const { data: photos } = await supabase
+    .from("farm_photos")
+    .select("id, url, caption")
+    .eq("farm_id", id)
+    .order("sort_order", { ascending: true });
+
   const embedSrc = farm.gmaps_link ? toEmbedSrc(farm.gmaps_link) : null;
+  const youtubeEmbedSrc = farm.intro_video_url ? toYouTubeEmbedSrc(farm.intro_video_url) : null;
   const schedule: ScheduleEntry[] = Array.isArray(farm.schedule) ? farm.schedule : [];
   const farmer = farm.farmer_profiles as {
     verified: boolean;
@@ -49,24 +59,43 @@ export default async function FarmDetailPage({
   } | null;
   const whatsappNumber = farmer?.users?.whatsapp_number;
 
-  const hostLine = farmer?.users?.name
-    ? `Hosted by ${farmer.users.name}${farmer.verified ? " · Verified" : ""}${
-        farmer.years_experience ? ` · ${farmer.years_experience} yrs experience` : ""
-      }`
-    : undefined;
+  const hostLine = [
+    farmer?.users?.name ? `Hosted by ${farmer.users.name}` : null,
+    farmer?.verified ? "Verified" : null,
+    farmer?.years_experience ? `${farmer.years_experience} yrs experience` : null,
+    farmCategoryLabel(farm.category),
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <main className="flex flex-1 flex-col">
       <PageHero
         eyebrow={farm.status === "open" ? "Open Now" : "Currently Closed"}
         title={farm.name}
-        description={hostLine}
+        description={hostLine || undefined}
       />
 
       <Container className="grid gap-8 py-12 sm:grid-cols-3">
         <div className="flex flex-col gap-6 sm:col-span-2">
           <AnimatedSection>
             <div className="flex flex-col gap-6">
+              {photos && photos.length > 0 && (
+                <div className="grid grid-cols-3 gap-2">
+                  {photos.map((photo) => (
+                    <Image
+                      key={photo.id}
+                      src={photo.url}
+                      alt={photo.caption ?? farm.name}
+                      width={200}
+                      height={150}
+                      unoptimized
+                      className="h-28 w-full rounded-lg object-cover"
+                    />
+                  ))}
+                </div>
+              )}
+
               {farm.description && <p className="text-green-800">{farm.description}</p>}
 
               {farm.tags && farm.tags.length > 0 && (
@@ -78,6 +107,46 @@ export default async function FarmDetailPage({
                   ))}
                 </div>
               )}
+
+              {(farm.price_agro_visit != null || farm.price_training != null) && (
+                <div className="flex gap-4">
+                  {farm.price_agro_visit != null && (
+                    <div className="rounded-lg bg-green-50 px-4 py-2">
+                      <div className="text-xs text-green-600">Agro-visit</div>
+                      <div className="font-heading text-lg font-medium text-green-950">
+                        ${farm.price_agro_visit}
+                      </div>
+                    </div>
+                  )}
+                  {farm.price_training != null && (
+                    <div className="rounded-lg bg-green-50 px-4 py-2">
+                      <div className="text-xs text-green-600">Training</div>
+                      <div className="font-heading text-lg font-medium text-green-950">
+                        ${farm.price_training}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {farm.intro_video_url &&
+                (youtubeEmbedSrc ? (
+                  <iframe
+                    src={youtubeEmbedSrc}
+                    className="aspect-video w-full rounded-2xl border border-border"
+                    loading="lazy"
+                    allowFullScreen
+                  />
+                ) : (
+                  <a
+                    href={farm.intro_video_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-brown-700 hover:underline"
+                  >
+                    Watch the farm introduction video
+                  </a>
+                ))}
 
               {schedule.length > 0 && (
                 <div>

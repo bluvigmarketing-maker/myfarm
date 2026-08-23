@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { Container } from "@/components/container";
 import { PageHero } from "@/components/page-hero";
@@ -6,18 +7,19 @@ import { AnimatedSection } from "@/components/animated-section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FARM_CATEGORY_OPTIONS, farmCategoryLabel } from "@/lib/farm-category";
 
 export default async function FarmsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; open?: string }>;
+  searchParams: Promise<{ q?: string; open?: string; category?: string }>;
 }) {
-  const { q, open } = await searchParams;
+  const { q, open, category } = await searchParams;
 
   const supabase = await createClient();
   let query = supabase
     .from("farms")
-    .select("id, name, description, tags, status")
+    .select("id, name, description, tags, status, category, cover_photo_url")
     .order("created_at", { ascending: false });
 
   if (q) {
@@ -25,6 +27,9 @@ export default async function FarmsPage({
   }
   if (open === "1") {
     query = query.eq("status", "open");
+  }
+  if (category) {
+    query = query.eq("category", category);
   }
 
   const { data: farms } = await query;
@@ -46,6 +51,18 @@ export default async function FarmsPage({
             placeholder="Search by farm name..."
             className="min-w-[200px] flex-1 rounded-lg border border-input px-3 py-2 outline-none focus:border-brown-500 focus:ring-2 focus:ring-brown-400/40"
           />
+          <select
+            name="category"
+            defaultValue={category ?? ""}
+            className="rounded-lg border border-input px-3 py-2 outline-none focus:border-brown-500 focus:ring-2 focus:ring-brown-400/40"
+          >
+            <option value="">All categories</option>
+            {FARM_CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
           <label className="flex items-center gap-2 text-sm text-green-800">
             <input type="checkbox" name="open" value="1" defaultChecked={open === "1"} />
             Open now
@@ -64,7 +81,17 @@ export default async function FarmsPage({
             <li key={farm.id}>
               <AnimatedSection delay={index * 0.05}>
                 <Link href={`/farms/${farm.id}`} className="block h-full">
-                  <Card className="soil-line h-full transition-transform hover:-translate-y-1 hover:shadow-md">
+                  <Card className="soil-line h-full overflow-hidden transition-transform hover:-translate-y-1 hover:shadow-md">
+                    {farm.cover_photo_url && (
+                      <Image
+                        src={farm.cover_photo_url}
+                        alt={farm.name}
+                        width={400}
+                        height={200}
+                        unoptimized
+                        className="h-40 w-full object-cover"
+                      />
+                    )}
                     <CardContent className="flex h-full flex-col gap-2">
                       <div className="flex items-center justify-between">
                         <span className="font-heading text-lg font-medium text-green-950">
@@ -74,6 +101,9 @@ export default async function FarmsPage({
                           {farm.status === "open" ? "Open" : "Closed"}
                         </Badge>
                       </div>
+                      <span className="text-xs font-medium text-brown-700">
+                        {farmCategoryLabel(farm.category)}
+                      </span>
                       {farm.description && (
                         <p className="line-clamp-2 text-sm text-green-700">{farm.description}</p>
                       )}

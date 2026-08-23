@@ -23,9 +23,11 @@ build tracking.
 2. Create a free project at [supabase.com](https://supabase.com).
 3. Copy `.env.local.example` to `.env.local` and fill in your Supabase
    project URL and anon key (Project Settings → API).
-4. Apply the schema: open the Supabase SQL editor and run the contents of
-   `supabase/migrations/0001_init.sql` (or `supabase db push` if you have the
-   Supabase CLI linked to your project).
+4. Apply the schema: open the Supabase SQL editor and run each file in
+   `supabase/migrations/` **in order** (`0001_init.sql`, then
+   `0002_farm_media_categories_pricing.sql`, ...) — or `supabase db push` if
+   you have the Supabase CLI linked to your project. New migration files
+   added later must be run the same way; the app doesn't run them for you.
 5. `npm run dev` and open [http://localhost:3000](http://localhost:3000).
 
 ## Scripts

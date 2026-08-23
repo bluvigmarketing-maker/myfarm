@@ -32,17 +32,19 @@ FarmerProfile
 
 Farm
  - id, farmer_id (FK -> FarmerProfile)
- - name, description, cover_photo_url
+ - name, description, cover_photo_url (featured image, shown on /farms cards)
+ - intro_video_url (Facebook, YouTube, or TikTok link)
+ - category: company_organization | school | family_personal
  - gmaps_link (raw URL), lat, lng (parsed, nullable)
  - status: open | closed (manual override)
  - schedule: [{day_of_week, open_time, close_time}]
  - blackout_dates: [date]
- - visit_price_type: free | fixed | training_fee
- - visit_price_amount (nullable)
+ - price_agro_visit (nullable — null = free/unset)
+ - price_training (nullable — null = free/unset)
  - tags[] (crop/livestock/training topics)
  - created_at, updated_at
 
-FarmPhoto
+FarmPhoto (gallery — capped at 5 per farm in the app layer)
  - id, farm_id, url, caption, sort_order
 
 FarmPost

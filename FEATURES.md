@@ -26,12 +26,14 @@ Farmer Profile — a farmer is also a visitor to other farms.
 - Can own/manage multiple Farm Profiles.
 
 ## 2. Farm Profile
-- Farm name, cover photo, photo gallery, description.
+- Farm name, **featured/cover image** (shown on the `/farms` archive cards), a **gallery of up to 5 photos**, description.
+- **Intro video**: farmer pastes a Facebook, YouTube, or TikTok video link. YouTube links get an inline embed (no API key needed); Facebook/TikTok show as an "open to watch" link.
+- **Category**: every farm is one of — Company/Organization Farm, School Farm, Family/Personal Farm. Visitors can filter search by category.
 - **Location**: farmer pastes a Google Maps share link (no paid Maps API). System parses/embeds it as a clickable link and, where possible, an embedded preview iframe.
 - Category tags: crop types, livestock, farming methods (organic, hydroponics, permaculture...), training topics offered.
 - **What's on the farm** — a feed/list of posts (text + photos) about current activities, crops in season, upcoming events. Chronological, like a mini blog/timeline per farm.
 - **Open/Closed control**: farmer toggles farm availability (Open/Closed) in real time, plus a weekly schedule (e.g. open Tue–Sun, 8am–4pm) and blackout dates (holidays, harvest lockdown, etc.). Visitors only see booking options when a farm is marked Open for the requested date.
-- Pricing info for visits (free / entrance fee / training fee), group size limits.
+- **Pricing**: farmer sets two separate prices — one for a pure agro-tourism visit, one for a training visit — shown on the farm's public page. Either can be left blank (free / not offered).
 
 ## 3. Booking via WhatsApp
 - Visitor selects a farm + a proposed date/time + number of people + purpose (training / tour / both).
