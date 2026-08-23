@@ -120,6 +120,37 @@ Report (moderation)
 - Use skeleton loaders and compressed images (WebP, responsive `srcset`) for low-bandwidth users.
 - Consider a installable **PWA** (add-to-homescreen) so farmers/visitors in rural areas get an app-like experience without app-store distribution.
 
+### 4.1 Design system (implemented)
+Two hue families, following the same structure as the reference
+`DESIGN-SYSTEM.md` (River Church Eldoret style) with navy→green and gold→brown:
+
+| Layer | Choice |
+|---|---|
+| Component primitives | shadcn/ui (`style: "base-nova"`, built on `@base-ui/react`) — Button, Card, Badge, Sheet, Dialog, DropdownMenu, NavigationMenu, Separator |
+| Motion | Framer Motion — `AnimatedSection` (scroll-triggered fade+rise, `viewport={{ once: true }}`) |
+| Icons | lucide-react |
+| Fonts | Geist Sans (body), Geist Mono, Playfair Display (`font-heading`, used on `h1`–`h4`) |
+
+**Color scale** (`src/app/globals.css`): `--green-50`…`--green-950` (structural —
+header/footer/hero surfaces, body text) and `--brown-50`…`--brown-900` (soil
+accent — CTAs, focus rings, eyebrow labels). `--green-800` (#166534) is the
+primary brand color; `--green-950` is the dark surface for `PageHero` and
+`SiteFooter`; brown becomes `--primary` when `.dark` is active (not currently
+toggled anywhere in the app, but defined for parity with the reference system).
+
+**Shared primitives** (`src/components/`): `Container` (`max-w-6xl` content
+width), `SectionHeading` (eyebrow pill → serif title → brown underline →
+description), `PageHero` (dark green banner for non-home pages), `AnimatedSection`.
+
+**Utilities**: `.btn-earthy` (brown gradient shimmer, the primary CTA
+treatment — replaces the reference's `.btn-metallic`/gold) and `.soil-line`
+(thin brown border accent — replaces `.gold-line`).
+
+**Base UI gotcha**: `Button`/`Badge` support a `render` prop for polymorphic
+rendering (e.g. `<Button render={<Link href="/farms" />}>`), but pass
+`nativeButton={false}` whenever the render target isn't a real `<button>` —
+otherwise Base UI logs an accessibility warning in dev.
+
 ---
 
 ## 5. Security & Trust Considerations

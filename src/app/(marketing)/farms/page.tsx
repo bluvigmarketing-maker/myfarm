@@ -1,5 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { Container } from "@/components/container";
+import { PageHero } from "@/components/page-hero";
+import { AnimatedSection } from "@/components/animated-section";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default async function FarmsPage({
   searchParams,
@@ -24,74 +30,70 @@ export default async function FarmsPage({
   const { data: farms } = await query;
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
-      <h1 className="text-2xl font-semibold text-stone-900">Find a Farm</h1>
-      <p className="mt-1 text-stone-600">
-        Browse farms open for training visits and agro-tourism.
-      </p>
+    <main className="flex flex-1 flex-col">
+      <PageHero
+        eyebrow="Discover"
+        title="Find a Farm"
+        description="Browse farms open for training visits and agro-tourism."
+      />
 
-      <form className="mt-6 flex flex-wrap items-center gap-3" action="/farms">
-        <input
-          type="text"
-          name="q"
-          defaultValue={q ?? ""}
-          placeholder="Search by farm name..."
-          className="min-w-[200px] flex-1 rounded-md border border-stone-300 px-3 py-2"
-        />
-        <label className="flex items-center gap-2 text-sm text-stone-700">
-          <input type="checkbox" name="open" value="1" defaultChecked={open === "1"} />
-          Open now
-        </label>
-        <button
-          type="submit"
-          className="rounded-full bg-green-800 px-5 py-2 text-sm font-medium text-white hover:bg-green-900"
-        >
-          Search
-        </button>
-      </form>
+      <Container className="flex flex-col gap-8 py-12">
+        <form className="flex flex-wrap items-center gap-3" action="/farms">
+          <input
+            type="text"
+            name="q"
+            defaultValue={q ?? ""}
+            placeholder="Search by farm name..."
+            className="min-w-[200px] flex-1 rounded-lg border border-input px-3 py-2 outline-none focus:border-brown-500 focus:ring-2 focus:ring-brown-400/40"
+          />
+          <label className="flex items-center gap-2 text-sm text-green-800">
+            <input type="checkbox" name="open" value="1" defaultChecked={open === "1"} />
+            Open now
+          </label>
+          <Button type="submit" className="btn-earthy soil-line font-semibold">
+            Search
+          </Button>
+        </form>
 
-      {(!farms || farms.length === 0) && (
-        <p className="mt-10 text-stone-600">No farms match your search yet.</p>
-      )}
+        {(!farms || farms.length === 0) && (
+          <p className="text-green-700">No farms match your search yet.</p>
+        )}
 
-      <ul className="mt-8 grid gap-4 sm:grid-cols-2">
-        {farms?.map((farm) => (
-          <li key={farm.id}>
-            <Link
-              href={`/farms/${farm.id}`}
-              className="flex h-full flex-col gap-2 rounded-lg border border-stone-200 bg-white p-5 hover:border-green-700"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-stone-900">{farm.name}</span>
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
-                    farm.status === "open"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-stone-200 text-stone-600"
-                  }`}
-                >
-                  {farm.status === "open" ? "Open" : "Closed"}
-                </span>
-              </div>
-              {farm.description && (
-                <p className="line-clamp-2 text-sm text-stone-600">{farm.description}</p>
-              )}
-              {farm.tags && farm.tags.length > 0 && (
-                <div className="mt-auto flex flex-wrap gap-2 pt-2">
-                  {farm.tags.map((tag: string) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-stone-100 px-2.5 py-1 text-xs text-stone-600"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Link>
-          </li>
-        ))}
-      </ul>
+        <ul className="grid gap-4 sm:grid-cols-2">
+          {farms?.map((farm, index) => (
+            <li key={farm.id}>
+              <AnimatedSection delay={index * 0.05}>
+                <Link href={`/farms/${farm.id}`} className="block h-full">
+                  <Card className="soil-line h-full transition-transform hover:-translate-y-1 hover:shadow-md">
+                    <CardContent className="flex h-full flex-col gap-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-heading text-lg font-medium text-green-950">
+                          {farm.name}
+                        </span>
+                        <Badge variant={farm.status === "open" ? "default" : "outline"}>
+                          {farm.status === "open" ? "Open" : "Closed"}
+                        </Badge>
+                      </div>
+                      {farm.description && (
+                        <p className="line-clamp-2 text-sm text-green-700">{farm.description}</p>
+                      )}
+                      {farm.tags && farm.tags.length > 0 && (
+                        <div className="mt-auto flex flex-wrap gap-2 pt-2">
+                          {farm.tags.map((tag: string) => (
+                            <Badge key={tag} variant="outline" className="soil-line text-green-800">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Link>
+              </AnimatedSection>
+            </li>
+          ))}
+        </ul>
+      </Container>
     </main>
   );
 }

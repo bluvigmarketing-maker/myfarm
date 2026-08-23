@@ -1,39 +1,40 @@
 import Link from "next/link";
+import { Container } from "@/components/container";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-stone-200 bg-white">
-      <div className="mx-auto flex max-w-5xl flex-col gap-8 px-6 py-10 sm:flex-row sm:justify-between">
-        <div className="flex flex-col gap-2">
-          <span className="text-lg font-semibold text-green-800">FarmVisit</span>
-          <p className="max-w-xs text-sm text-stone-500">
+    <footer className="bg-green-950 text-green-100">
+      <Container className="grid gap-8 py-12 sm:grid-cols-3">
+        <div className="flex flex-col gap-3">
+          <span className="font-heading text-xl font-semibold text-white">FarmVisit</span>
+          <p className="max-w-xs text-sm text-green-200">
             Learn farming the way it&apos;s always been taught: in the field.
             Discover farms open for training visits and agro-tourism.
           </p>
         </div>
 
         <div className="flex flex-col gap-2 text-sm">
-          <span className="font-medium text-stone-900">Explore</span>
-          <Link href="/farms" className="text-stone-600 hover:text-green-800">
+          <span className="font-medium text-brown-300">Explore</span>
+          <Link href="/farms" className="text-green-200 hover:text-white">
             Find a Farm
           </Link>
-          <Link href="/signup" className="text-stone-600 hover:text-green-800">
+          <Link href="/signup" className="text-green-200 hover:text-white">
             List Your Farm
           </Link>
-          <Link href="/login" className="text-stone-600 hover:text-green-800">
+          <Link href="/login" className="text-green-200 hover:text-white">
             Log in
           </Link>
         </div>
 
         <div className="flex flex-col gap-2 text-sm">
-          <span className="font-medium text-stone-900">About</span>
-          <span className="text-stone-600">
+          <span className="font-medium text-brown-300">About</span>
+          <span className="text-green-200">
             Bookings and orders happen directly on WhatsApp between you and
             the farmer.
           </span>
         </div>
-      </div>
-      <div className="border-t border-stone-100 py-4 text-center text-xs text-stone-400">
+      </Container>
+      <div className="border-t border-green-800 py-4 text-center text-xs text-green-400">
         © {new Date().getFullYear()} FarmVisit. All rights reserved.
       </div>
     </footer>

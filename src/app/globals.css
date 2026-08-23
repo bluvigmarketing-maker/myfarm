@@ -1,26 +1,229 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-playfair);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Raw brand scales exposed as Tailwind utilities: bg-green-600, text-brown-700, etc. */
+  --color-green-50: var(--green-50);
+  --color-green-100: var(--green-100);
+  --color-green-200: var(--green-200);
+  --color-green-300: var(--green-300);
+  --color-green-400: var(--green-400);
+  --color-green-500: var(--green-500);
+  --color-green-600: var(--green-600);
+  --color-green-700: var(--green-700);
+  --color-green-800: var(--green-800);
+  --color-green-900: var(--green-900);
+  --color-green-950: var(--green-950);
+
+  --color-brown-50: var(--brown-50);
+  --color-brown-100: var(--brown-100);
+  --color-brown-200: var(--brown-200);
+  --color-brown-300: var(--brown-300);
+  --color-brown-400: var(--brown-400);
+  --color-brown-500: var(--brown-500);
+  --color-brown-600: var(--brown-600);
+  --color-brown-700: var(--brown-700);
+  --color-brown-800: var(--brown-800);
+  --color-brown-900: var(--brown-900);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+ * Two hue families only: a green scale (primary/structural, standing in for
+ * the reference system's navy) and a brown "soil" scale (accent/CTA, standing
+ * in for its gold). Semantic tokens below reference these, never raw hex.
+ */
+:root {
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+  --green-200: #bbf7d0;
+  --green-300: #86efac;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --green-800: #166534; /* primary brand green */
+  --green-900: #14532d;
+  --green-950: #052e16; /* darkest surface — headers/footers/hero overlays */
+
+  --brown-50: #f9f4ef;
+  --brown-100: #f0e4d6;
+  --brown-200: #e0c7ab;
+  --brown-300: #cca67d;
+  --brown-400: #b3835a; /* ring/focus color */
+  --brown-500: #96693f; /* soil accent/secondary */
+  --brown-600: #7c5330;
+  --brown-700: #603f27; /* accent text on light backgrounds (AA-safe) */
+  --brown-800: #4a3020;
+  --brown-900: #362316;
+
+  --background: oklch(1 0 0);
+  --foreground: var(--green-950);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--green-950);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--green-950);
+  --primary: var(--green-800);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: var(--brown-500);
+  --secondary-foreground: var(--green-950);
+  --muted: var(--green-50);
+  --muted-foreground: var(--green-700);
+  --accent: var(--brown-100);
+  --accent-foreground: var(--green-900);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: var(--green-100);
+  --input: var(--green-100);
+  --ring: var(--brown-400);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: var(--green-800);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: var(--brown-100);
+  --sidebar-accent-foreground: var(--green-900);
+  --sidebar-border: var(--green-100);
+  --sidebar-ring: var(--brown-400);
+}
+
+.dark {
+  --background: var(--green-950);
+  --foreground: oklch(0.985 0 0);
+  --card: var(--green-900);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: var(--green-900);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: var(--brown-500); /* inverts: brown becomes primary in dark mode */
+  --primary-foreground: var(--green-950);
+  --secondary: var(--green-700);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: var(--green-800);
+  --muted-foreground: var(--green-200);
+  --accent: var(--green-800);
+  --accent-foreground: var(--brown-300);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: var(--green-800);
+  --input: var(--green-800);
+  --ring: var(--brown-400);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: var(--green-900);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: var(--brown-500);
+  --sidebar-primary-foreground: var(--green-950);
+  --sidebar-accent: var(--green-800);
+  --sidebar-accent-foreground: var(--brown-300);
+  --sidebar-border: var(--green-800);
+  --sidebar-ring: var(--brown-400);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Primary brand CTA — a warm shimmer across the soil-brown scale. */
+  .btn-earthy {
+    background-image: linear-gradient(
+      110deg,
+      var(--brown-600) 0%,
+      var(--brown-300) 30%,
+      var(--brown-500) 45%,
+      var(--brown-100) 55%,
+      var(--brown-500) 70%,
+      var(--brown-600) 100%
+    );
+    background-size: 250% 100%;
+    color: var(--green-950);
+    animation: shimmer 5s linear infinite;
+  }
+  .btn-earthy:hover {
+    animation-duration: 1.8s;
+  }
+
+  /* Thin brown outline, reused on emphasized cards/buttons/dividers. */
+  .soil-line {
+    @apply border border-brown-400/60;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: -200% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-earthy {
+    animation: none;
+  }
 }

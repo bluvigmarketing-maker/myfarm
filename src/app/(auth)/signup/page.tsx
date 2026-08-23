@@ -1,5 +1,10 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { signup } from "../actions";
+
+const inputClass =
+  "rounded-lg border border-green-200 px-3 py-2 outline-none focus:border-brown-500 focus:ring-2 focus:ring-brown-400/40";
+const labelClass = "flex flex-col gap-1 text-sm font-medium text-green-900";
 
 export default async function SignupPage({
   searchParams,
@@ -10,52 +15,33 @@ export default async function SignupPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold text-stone-900">Create an account</h1>
+      <h1 className="font-heading text-xl font-semibold text-green-950">Create an account</h1>
 
       {error && (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
       )}
 
       <form action={signup} className="flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClass}>
           Name
-          <input
-            type="text"
-            name="name"
-            required
-            className="rounded-md border border-stone-300 px-3 py-2"
-          />
+          <input type="text" name="name" required className={inputClass} />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClass}>
           Email
-          <input
-            type="email"
-            name="email"
-            required
-            className="rounded-md border border-stone-300 px-3 py-2"
-          />
+          <input type="email" name="email" required className={inputClass} />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClass}>
           Password
-          <input
-            type="password"
-            name="password"
-            required
-            minLength={6}
-            className="rounded-md border border-stone-300 px-3 py-2"
-          />
+          <input type="password" name="password" required minLength={6} className={inputClass} />
         </label>
-        <button
-          type="submit"
-          className="rounded-full bg-green-800 px-4 py-2 font-medium text-white hover:bg-green-900"
-        >
+        <Button type="submit" className="btn-earthy soil-line font-semibold">
           Sign up
-        </button>
+        </Button>
       </form>
 
-      <p className="text-sm text-stone-600">
+      <p className="text-sm text-green-700">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-green-800">
+        <Link href="/login" className="font-medium text-brown-700 hover:underline">
           Log in
         </Link>
       </p>

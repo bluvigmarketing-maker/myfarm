@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { toEmbedSrc } from "@/lib/gmaps";
 import { updateFarm, setFarmStatus } from "../../../actions";
+import { Button } from "@/components/ui/button";
 
 const DAYS = [
   { key: "mon", label: "Mon" },
@@ -14,6 +15,10 @@ const DAYS = [
 ] as const;
 
 type ScheduleEntry = { day_of_week: string; open_time: string; close_time: string };
+
+const inputClass =
+  "rounded-lg border border-green-200 px-3 py-2 outline-none focus:border-brown-500 focus:ring-2 focus:ring-brown-400/40";
+const labelClass = "flex flex-col gap-1 text-sm font-medium text-green-900";
 
 export default async function EditFarmPage({
   params,
@@ -44,22 +49,19 @@ export default async function EditFarmPage({
   return (
     <div className="flex max-w-lg flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-stone-900">{farm.name}</h1>
+        <h1 className="font-heading text-xl font-semibold text-green-950">{farm.name}</h1>
         <form action={farm.status === "open" ? closeFarm : openFarm}>
-          <button
+          <Button
             type="submit"
-            className={`rounded-full px-4 py-2 text-sm font-medium ${
-              farm.status === "open"
-                ? "bg-stone-200 text-stone-700 hover:bg-stone-300"
-                : "bg-green-800 text-white hover:bg-green-900"
-            }`}
+            variant={farm.status === "open" ? "secondary" : "default"}
+            className={farm.status === "open" ? undefined : "btn-earthy soil-line"}
           >
             {farm.status === "open" ? "Mark Closed" : "Mark Open"}
-          </button>
+          </Button>
         </form>
       </div>
 
-      {error && <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+      {error && <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>}
       {saved && (
         <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-800">Saved.</p>
       )}
@@ -67,7 +69,7 @@ export default async function EditFarmPage({
       {embedSrc && (
         <iframe
           src={embedSrc}
-          className="h-48 w-full rounded-lg border border-stone-200"
+          className="h-48 w-full rounded-2xl border border-border"
           loading="lazy"
         />
       )}
@@ -75,50 +77,44 @@ export default async function EditFarmPage({
       <form action={updateFarmWithId} className="flex flex-col gap-4">
         <input type="hidden" name="status" value={farm.status} />
 
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClass}>
           Farm name
-          <input
-            type="text"
-            name="name"
-            defaultValue={farm.name}
-            required
-            className="rounded-md border border-stone-300 px-3 py-2"
-          />
+          <input type="text" name="name" defaultValue={farm.name} required className={inputClass} />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClass}>
           Description
           <textarea
             name="description"
             rows={4}
             defaultValue={farm.description ?? ""}
-            className="rounded-md border border-stone-300 px-3 py-2"
+            className={inputClass}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClass}>
           Google Maps link
           <input
             type="url"
             name="gmaps_link"
             defaultValue={farm.gmaps_link ?? ""}
             placeholder="https://maps.app.goo.gl/..."
-            className="rounded-md border border-stone-300 px-3 py-2"
+            className={inputClass}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className={labelClass}>
           Tags (comma separated)
           <input
             type="text"
             name="tags"
             defaultValue={(farm.tags ?? []).join(", ")}
-            className="rounded-md border border-stone-300 px-3 py-2"
+            className={inputClass}
           />
         </label>
 
         <fieldset className="flex flex-col gap-2">
-          <legend className="text-sm font-medium text-stone-700">Weekly schedule</legend>
+          <legend className="text-sm font-medium text-green-900">Weekly schedule</legend>
           <div className="flex flex-wrap gap-3">
             {DAYS.map((day) => (
-              <label key={day.key} className="flex items-center gap-1 text-sm">
+              <label key={day.key} className="flex items-center gap-1 text-sm text-green-800">
                 <input
                   type="checkbox"
                   name={`day_${day.key}`}
@@ -129,33 +125,20 @@ export default async function EditFarmPage({
             ))}
           </div>
           <div className="flex gap-3">
-            <label className="flex flex-col gap-1 text-sm">
+            <label className={labelClass}>
               Open time
-              <input
-                type="time"
-                name="open_time"
-                defaultValue={defaultOpenTime}
-                className="rounded-md border border-stone-300 px-3 py-2"
-              />
+              <input type="time" name="open_time" defaultValue={defaultOpenTime} className={inputClass} />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
+            <label className={labelClass}>
               Close time
-              <input
-                type="time"
-                name="close_time"
-                defaultValue={defaultCloseTime}
-                className="rounded-md border border-stone-300 px-3 py-2"
-              />
+              <input type="time" name="close_time" defaultValue={defaultCloseTime} className={inputClass} />
             </label>
           </div>
         </fieldset>
 
-        <button
-          type="submit"
-          className="rounded-full bg-green-800 px-4 py-2 font-medium text-white hover:bg-green-900"
-        >
+        <Button type="submit" className="btn-earthy soil-line font-semibold">
           Save Changes
-        </button>
+        </Button>
       </form>
     </div>
   );

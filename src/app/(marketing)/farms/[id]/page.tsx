@@ -2,6 +2,11 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { toEmbedSrc } from "@/lib/gmaps";
 import { WhatsAppBookingForm } from "@/components/whatsapp-booking-form";
+import { Container } from "@/components/container";
+import { PageHero } from "@/components/page-hero";
+import { AnimatedSection } from "@/components/animated-section";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 const DAY_LABELS: Record<string, string> = {
   mon: "Mon",
@@ -44,93 +49,89 @@ export default async function FarmDetailPage({
   } | null;
   const whatsappNumber = farmer?.users?.whatsapp_number;
 
+  const hostLine = farmer?.users?.name
+    ? `Hosted by ${farmer.users.name}${farmer.verified ? " · Verified" : ""}${
+        farmer.years_experience ? ` · ${farmer.years_experience} yrs experience` : ""
+      }`
+    : undefined;
+
   return (
-    <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-12">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-stone-900">{farm.name}</h1>
-        <span
-          className={`rounded-full px-3 py-1 text-xs font-medium ${
-            farm.status === "open"
-              ? "bg-green-100 text-green-800"
-              : "bg-stone-200 text-stone-600"
-          }`}
-        >
-          {farm.status === "open" ? "Open" : "Closed"}
-        </span>
-      </div>
+    <main className="flex flex-1 flex-col">
+      <PageHero
+        eyebrow={farm.status === "open" ? "Open Now" : "Currently Closed"}
+        title={farm.name}
+        description={hostLine}
+      />
 
-      {farmer?.users?.name && (
-        <p className="mt-1 text-sm text-stone-500">
-          Hosted by {farmer.users.name}
-          {farmer.verified ? " · Verified" : ""}
-          {farmer.years_experience ? ` · ${farmer.years_experience} yrs experience` : ""}
-        </p>
-      )}
-
-      <div className="mt-8 grid gap-8 sm:grid-cols-3">
+      <Container className="grid gap-8 py-12 sm:grid-cols-3">
         <div className="flex flex-col gap-6 sm:col-span-2">
-          {farm.description && <p className="text-stone-700">{farm.description}</p>}
+          <AnimatedSection>
+            <div className="flex flex-col gap-6">
+              {farm.description && <p className="text-green-800">{farm.description}</p>}
 
-          {farm.tags && farm.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {farm.tags.map((tag: string) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-stone-100 px-2.5 py-1 text-xs text-stone-600"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+              {farm.tags && farm.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {farm.tags.map((tag: string) => (
+                    <Badge key={tag} variant="outline" className="soil-line text-green-800">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
 
-          {schedule.length > 0 && (
-            <div>
-              <h2 className="font-medium text-stone-900">Weekly Hours</h2>
-              <ul className="mt-2 flex flex-wrap gap-2 text-sm text-stone-600">
-                {schedule.map((entry) => (
-                  <li
-                    key={entry.day_of_week}
-                    className="rounded-md bg-stone-100 px-2.5 py-1"
+              {schedule.length > 0 && (
+                <div>
+                  <h2 className="font-heading text-lg font-medium text-green-950">
+                    Weekly Hours
+                  </h2>
+                  <ul className="mt-2 flex flex-wrap gap-2 text-sm text-green-800">
+                    {schedule.map((entry) => (
+                      <li
+                        key={entry.day_of_week}
+                        className="rounded-md bg-green-50 px-2.5 py-1"
+                      >
+                        {DAY_LABELS[entry.day_of_week] ?? entry.day_of_week} {entry.open_time}–
+                        {entry.close_time}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {embedSrc ? (
+                <iframe
+                  src={embedSrc}
+                  className="h-64 w-full rounded-2xl border border-border"
+                  loading="lazy"
+                />
+              ) : (
+                farm.gmaps_link && (
+                  <a
+                    href={farm.gmaps_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-brown-700 hover:underline"
                   >
-                    {DAY_LABELS[entry.day_of_week] ?? entry.day_of_week} {entry.open_time}–
-                    {entry.close_time}
-                  </li>
-                ))}
-              </ul>
+                    Open location in Google Maps
+                  </a>
+                )
+              )}
             </div>
-          )}
-
-          {embedSrc ? (
-            <iframe
-              src={embedSrc}
-              className="h-64 w-full rounded-lg border border-stone-200"
-              loading="lazy"
-            />
-          ) : (
-            farm.gmaps_link && (
-              <a
-                href={farm.gmaps_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-green-800 hover:underline"
-              >
-                Open location in Google Maps
-              </a>
-            )
-          )}
+          </AnimatedSection>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <AnimatedSection delay={0.1} className="flex flex-col gap-4">
           {whatsappNumber ? (
             <WhatsAppBookingForm farmName={farm.name} whatsappNumber={whatsappNumber} />
           ) : (
-            <p className="rounded-lg border border-stone-200 bg-white p-5 text-sm text-stone-500">
-              This farmer hasn&apos;t added a WhatsApp number yet.
-            </p>
+            <Card className="soil-line">
+              <CardContent className="text-sm text-green-700">
+                This farmer hasn&apos;t added a WhatsApp number yet.
+              </CardContent>
+            </Card>
           )}
-        </div>
-      </div>
+        </AnimatedSection>
+      </Container>
     </main>
   );
 }
