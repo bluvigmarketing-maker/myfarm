@@ -82,6 +82,12 @@ Farmer Profile — a farmer is also a visitor to other farms.
 - No paid third-party APIs required for MVP (Google Maps used only via free share-link embedding, WhatsApp via free `wa.me` deep links).
 - Multi-language ready (structure for future localization, e.g. English + local language).
 
+## 11. Interactive Onboarding Tour
+- A friendly goat mascot ("Billy") greets every new visitor and asks what they're here for: **become a Model Farmer**, **learn & visit farms**, or **both**.
+- Each choice leads to a short, plain-English (grade 5 reading level) walkthrough of the relevant flow, ending in a call-to-action (sign up, or browse farms).
+- Skippable at any point; a small floating "Take the tour" button lets anyone replay it later.
+- Shown once automatically per browser (remembered via local storage), never blocks the app itself.
+
 ---
 
 ## Feature Priority (MVP vs Later)
