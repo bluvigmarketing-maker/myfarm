@@ -9,8 +9,17 @@ import {
   uploadFeaturedImage,
   uploadFarmPhotos,
   deleteFarmPhoto,
+  addProduct,
+  updateProduct,
+  deleteProduct,
 } from "../../../actions";
 import { Button } from "@/components/ui/button";
+
+const STOCK_STATUS_OPTIONS = [
+  { value: "in_stock", label: "In stock" },
+  { value: "out_of_stock", label: "Out of stock" },
+  { value: "seasonal", label: "Seasonal" },
+] as const;
 
 const DAYS = [
   { key: "mon", label: "Mon" },
@@ -53,7 +62,14 @@ export default async function EditFarmPage({
     .eq("farm_id", id)
     .order("sort_order", { ascending: true });
 
+  const { data: products } = await supabase
+    .from("products")
+    .select("id, name, description, photo_url, price, unit, stock_status")
+    .eq("farm_id", id)
+    .order("created_at", { ascending: false });
+
   const updateFarmWithId = updateFarm.bind(null, farm.id);
+  const addProductWithId = addProduct.bind(null, farm.id);
   const openFarm = setFarmStatus.bind(null, farm.id, "open");
   const closeFarm = setFarmStatus.bind(null, farm.id, "closed");
   const uploadFeaturedImageWithId = uploadFeaturedImage.bind(null, farm.id);
@@ -284,6 +300,123 @@ export default async function EditFarmPage({
           Save Changes
         </Button>
       </form>
+
+      <div className="flex flex-col gap-4 border-t border-border pt-8">
+        <div>
+          <h2 className="font-heading text-lg font-medium text-green-950">Farm Shop</h2>
+          <p className="text-xs text-green-600">
+            Sell produce at farm price. Shown on the public Market page —
+            visitors order straight through WhatsApp.
+          </p>
+        </div>
+
+        {products && products.length > 0 && (
+          <ul className="flex flex-col gap-3">
+            {products.map((product) => (
+              <li key={product.id} className="rounded-lg border border-green-200 p-3">
+                <div className="flex gap-3">
+                  {product.photo_url && (
+                    <Image
+                      src={product.photo_url}
+                      alt=""
+                      width={64}
+                      height={64}
+                      unoptimized
+                      className="size-16 rounded-md object-cover"
+                    />
+                  )}
+                  <form
+                    action={updateProduct.bind(null, farm.id, product.id)}
+                    className="flex flex-1 flex-col gap-2"
+                  >
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        name="name"
+                        defaultValue={product.name}
+                        required
+                        className={`flex-1 ${inputClass}`}
+                      />
+                      <input
+                        type="number"
+                        name="price"
+                        min={0}
+                        step="0.01"
+                        defaultValue={product.price}
+                        required
+                        className={`w-24 ${inputClass}`}
+                      />
+                      <input
+                        type="text"
+                        name="unit"
+                        defaultValue={product.unit}
+                        placeholder="unit"
+                        className={`w-24 ${inputClass}`}
+                      />
+                    </div>
+                    <textarea
+                      name="description"
+                      rows={2}
+                      defaultValue={product.description ?? ""}
+                      placeholder="Description (optional)"
+                      className={inputClass}
+                    />
+                    <div className="flex items-center gap-2">
+                      <select
+                        name="stock_status"
+                        defaultValue={product.stock_status}
+                        className={inputClass}
+                      >
+                        {STOCK_STATUS_OPTIONS.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                      <Button type="submit" size="sm" className="btn-earthy soil-line font-semibold">
+                        Save
+                      </Button>
+                    </div>
+                  </form>
+                  <form action={deleteProduct.bind(null, farm.id, product.id)}>
+                    <button
+                      type="submit"
+                      aria-label="Delete product"
+                      className="rounded-full bg-black/60 px-1.5 py-0.5 text-xs text-white hover:bg-black/80"
+                    >
+                      ✕
+                    </button>
+                  </form>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <form action={addProductWithId} className="flex flex-col gap-2 rounded-lg border border-dashed border-green-300 p-3">
+          <h3 className="text-sm font-medium text-green-900">Add a product</h3>
+          <div className="flex gap-2">
+            <input type="text" name="name" placeholder="Name" required className={`flex-1 ${inputClass}`} />
+            <input
+              type="number"
+              name="price"
+              min={0}
+              step="0.01"
+              placeholder="Price"
+              required
+              className={`w-24 ${inputClass}`}
+            />
+            <input type="text" name="unit" placeholder="unit (kg, dozen...)" className={`w-32 ${inputClass}`} />
+          </div>
+          <textarea name="description" rows={2} placeholder="Description (optional)" className={inputClass} />
+          <div className="flex items-center gap-3">
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" className="text-sm text-green-800" />
+            <Button type="submit" size="sm" className="btn-earthy soil-line font-semibold">
+              Add Product
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

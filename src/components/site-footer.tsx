@@ -18,6 +18,9 @@ export function SiteFooter() {
           <Link href="/farms" className="text-green-200 hover:text-white">
             Find a Farm
           </Link>
+          <Link href="/market" className="text-green-200 hover:text-white">
+            Market
+          </Link>
           <Link href="/signup" className="text-green-200 hover:text-white">
             List Your Farm
           </Link>
@@ -28,6 +31,9 @@ export function SiteFooter() {
 
         <div className="flex flex-col gap-2 text-sm">
           <span className="font-medium text-brown-300">About</span>
+          <Link href="/about" className="text-green-200 hover:text-white">
+            About Us
+          </Link>
           <span className="text-green-200">
             Bookings and orders happen directly on WhatsApp between you and
             the farmer.

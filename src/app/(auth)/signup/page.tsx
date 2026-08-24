@@ -35,7 +35,7 @@ export default async function SignupPage({
           Password
           <PasswordInput name="password" required minLength={6} className={inputClass} />
         </label>
-        <Button type="submit" className="btn-earthy soil-line font-semibold">
+        <Button type="submit" className="btn-earthy soil-line font-semibold" data-tour="signup-submit">
           Sign up
         </Button>
       </form>

@@ -23,11 +23,18 @@ export default function Home() {
             size="lg"
             className="btn-earthy soil-line font-semibold"
             nativeButton={false}
+            data-tour="home-browse-farms"
             render={<Link href="/farms" />}
           >
             Browse Farms
           </Button>
-          <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/signup" />}>
+          <Button
+            size="lg"
+            variant="outline"
+            nativeButton={false}
+            data-tour="home-list-farm"
+            render={<Link href="/signup" />}
+          >
             List Your Farm
           </Button>
         </div>

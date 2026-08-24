@@ -43,7 +43,11 @@ export default async function FarmsPage({
       />
 
       <Container className="flex flex-col gap-8 py-12">
-        <form className="flex flex-wrap items-center gap-3" action="/farms">
+        <form
+          className="flex flex-wrap items-center gap-3"
+          action="/farms"
+          data-tour="farms-search"
+        >
           <input
             type="text"
             name="q"
@@ -72,6 +76,7 @@ export default async function FarmsPage({
           </Button>
         </form>
 
+        <div data-tour="farms-results" className="flex flex-col gap-4">
         {(!farms || farms.length === 0) && (
           <p className="text-green-700">No farms match your search yet.</p>
         )}
@@ -123,6 +128,7 @@ export default async function FarmsPage({
             </li>
           ))}
         </ul>
+        </div>
       </Container>
     </main>
   );

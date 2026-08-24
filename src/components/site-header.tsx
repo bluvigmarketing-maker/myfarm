@@ -8,8 +8,11 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Container } from "@/components/container";
 
 const NAV_LINKS = [
-  { href: "/farms", label: "Find a Farm" },
-  { href: "/login", label: "Log in" },
+  { href: "/", label: "Home", tourId: "nav-home" },
+  { href: "/farms", label: "Find a Farm", tourId: "nav-find-farm" },
+  { href: "/market", label: "Market", tourId: "nav-market" },
+  { href: "/about", label: "About Us", tourId: "nav-about" },
+  { href: "/login", label: "Log in", tourId: "nav-login" },
 ];
 
 export function SiteHeader() {
@@ -24,13 +27,19 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-green-800/80 md:flex">
           {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-green-900">
+            <Link
+              key={link.href}
+              href={link.href}
+              data-tour={link.tourId}
+              className="hover:text-green-900"
+            >
               {link.label}
             </Link>
           ))}
           <Button
             className="btn-earthy soil-line font-semibold"
             nativeButton={false}
+            data-tour="nav-list-farm"
             render={<Link href="/signup" />}
           >
             List Your Farm

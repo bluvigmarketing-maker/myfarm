@@ -95,10 +95,11 @@ Report (moderation)
 6. Farmer confirms the real arrangement over WhatsApp, then updates status in-app (optional but encouraged, unlocks review eligibility).
 
 ### 3.3 Farm Shop Flow (MVP: inquiry mode)
-1. Visitor views Farm Shop tab → product list with prices.
-2. Click **"Order via WhatsApp"** on a product (or select multiple → "Order selected").
-3. Pre-filled WhatsApp message with product name(s)/qty sent to farmer.
-4. Farmer fulfills and settles payment in person/via WhatsApp (cash, e-wallet link farmer already uses, etc.) — no payment gateway in MVP.
+1. Farmer adds products (name, description, photo, price, unit) from the Farm Shop section of their farm's dashboard edit page.
+2. Visitor browses the public **Market** (`/market`) — every farm's products aggregated into one searchable, multitenant storefront — or a single farm's shop items.
+3. Click **"Order via WhatsApp"** on a product.
+4. Pre-filled WhatsApp message with the product name/unit sent to the farmer.
+5. Farmer fulfills and settles payment in person/via WhatsApp (cash, e-wallet link farmer already uses, etc.) — no payment gateway in MVP.
 
 ### 3.4 Open/Closed Control
 - Farmer has a single toggle (Open Now / Closed) shown prominently on their dashboard, overriding the weekly schedule for same-day changes (e.g. rain, harvest emergency).

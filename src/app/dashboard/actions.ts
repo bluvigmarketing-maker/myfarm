@@ -12,6 +12,14 @@ const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 const MAX_FARM_PHOTOS = 5;
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const FARM_CATEGORIES = ["company_organization", "school", "family_personal"] as const;
+const STOCK_STATUSES = ["in_stock", "out_of_stock", "seasonal"] as const;
+
+function parseStockStatus(raw: FormDataEntryValue | null): (typeof STOCK_STATUSES)[number] {
+  const value = String(raw ?? "");
+  return (STOCK_STATUSES as readonly string[]).includes(value)
+    ? (value as (typeof STOCK_STATUSES)[number])
+    : "in_stock";
+}
 
 function parsePrice(raw: FormDataEntryValue | null): number | null {
   const value = String(raw ?? "").trim();
@@ -307,4 +315,108 @@ export async function deleteFarmPhoto(farmId: string, photoId: string) {
 
   revalidatePath(`/dashboard/farms/${farmId}/edit`);
   revalidatePath(`/farms/${farmId}`);
+}
+
+export async function addProduct(farmId: string, formData: FormData) {
+  await verifySession();
+  const supabase = await createClient();
+
+  const name = String(formData.get("name") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const price = parsePrice(formData.get("price"));
+  const unit = String(formData.get("unit") ?? "").trim() || "unit";
+  const file = formData.get("photo");
+
+  if (!name || price == null) {
+    redirect(
+      `/dashboard/farms/${farmId}/edit?error=${encodeURIComponent("Product name and a valid price are required.")}`
+    );
+  }
+
+  let photoUrl: string | null = null;
+  if (file instanceof File && file.size > 0) {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      redirect(
+        `/dashboard/farms/${farmId}/edit?error=${encodeURIComponent("Product photo must be JPEG, PNG, or WEBP.")}`
+      );
+    }
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${farmId}/product-${crypto.randomUUID()}.${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from(FARM_MEDIA_BUCKET)
+      .upload(path, file, { contentType: file.type });
+    if (!uploadError) {
+      photoUrl = supabase.storage.from(FARM_MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
+    }
+  }
+
+  const { error } = await supabase.from("products").insert({
+    farm_id: farmId,
+    name,
+    description: description || null,
+    price,
+    unit,
+    photo_url: photoUrl,
+  });
+
+  if (error) {
+    redirect(`/dashboard/farms/${farmId}/edit?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath(`/dashboard/farms/${farmId}/edit`);
+  revalidatePath("/market");
+  redirect(`/dashboard/farms/${farmId}/edit?saved=1`);
+}
+
+export async function updateProduct(farmId: string, productId: string, formData: FormData) {
+  await verifySession();
+  const supabase = await createClient();
+
+  const name = String(formData.get("name") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const price = parsePrice(formData.get("price"));
+  const unit = String(formData.get("unit") ?? "").trim() || "unit";
+  const stockStatus = parseStockStatus(formData.get("stock_status"));
+
+  if (!name || price == null) {
+    redirect(
+      `/dashboard/farms/${farmId}/edit?error=${encodeURIComponent("Product name and a valid price are required.")}`
+    );
+  }
+
+  const { error } = await supabase
+    .from("products")
+    .update({ name, description: description || null, price, unit, stock_status: stockStatus })
+    .eq("id", productId);
+
+  if (error) {
+    redirect(`/dashboard/farms/${farmId}/edit?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath(`/dashboard/farms/${farmId}/edit`);
+  revalidatePath("/market");
+  redirect(`/dashboard/farms/${farmId}/edit?saved=1`);
+}
+
+export async function deleteProduct(farmId: string, productId: string) {
+  await verifySession();
+  const supabase = await createClient();
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("photo_url")
+    .eq("id", productId)
+    .maybeSingle();
+
+  if (product?.photo_url) {
+    const path = storagePathFromPublicUrl(product.photo_url);
+    if (path) {
+      await supabase.storage.from(FARM_MEDIA_BUCKET).remove([path]);
+    }
+  }
+
+  await supabase.from("products").delete().eq("id", productId);
+
+  revalidatePath(`/dashboard/farms/${farmId}/edit`);
+  revalidatePath("/market");
 }

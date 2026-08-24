@@ -41,12 +41,11 @@ Farmer Profile — a farmer is also a visitor to other farms.
 - Optional: log the booking request in-app (status: Requested) so both sides can track history, even though confirmation happens in WhatsApp.
 - Farmer can mark a logged request as Confirmed / Declined / Completed for their own records.
 
-## 4. Farm Shop
-- Farmer lists products for sale at **farm-gate price** (produce, seedlings, livestock, processed goods, farm-made crafts).
-- Each product: name, photo, price, unit, stock/availability status (In stock / Out of stock / Seasonal).
-- Two ordering modes (configurable per farm):
-  - **Inquiry mode**: "Order via WhatsApp" — same deep-link pattern as booking, sends a pre-filled order message.
-  - **Reserve mode (optional, later phase)**: visitor adds to cart, submits an order request that's logged in-app and confirmed by the farmer, still finalized/paid via WhatsApp/cash/in-person (no online payment gateway in MVP).
+## 4. Farm Shop / Market
+- Farmer lists products for sale at **farm-gate price** (produce, seedlings, livestock, processed goods, farm-made crafts) from their dashboard.
+- Each product: name, description, photo, price, unit, stock/availability status (In stock / Out of stock / Seasonal).
+- **The Market** (`/market`) is the public, multitenant storefront — every farm's products aggregated into one browsable, searchable page. Each listing links back to its farm.
+- **Ordering**: "Order via WhatsApp" — same deep-link pattern as booking, sends a pre-filled order message straight to the farmer. No cart, no payment gateway, no middleman (Reserve-mode in-app order tracking remains a later-phase option).
 
 ## 5. Search & Discovery
 - Search by location (region/province/city, or map area if using a free geocoding fallback), crop/livestock type, training topic, open-now status, price range.
@@ -85,6 +84,7 @@ Farmer Profile — a farmer is also a visitor to other farms.
 ## 11. Interactive Onboarding Tour
 - A friendly goat mascot ("Billy") greets every new visitor and asks what they're here for: **become a Model Farmer**, **learn & visit farms**, or **both**.
 - Each choice leads to a short, plain-English (grade 5 reading level) walkthrough of the relevant flow, ending in a call-to-action (sign up, or browse farms).
+- **Spotlights real UI**: whenever a step talks about a specific button or link (e.g. "Find a Farm," the search bar), it actually navigates there and highlights that real element with a glowing ring, dimming the rest of the page. Steps describing dashboard-only actions (which require login) stay text-only since there's no real element to point at for an anonymous visitor.
 - Skippable at any point; a small floating "Take the tour" button lets anyone replay it later.
 - Shown once automatically per browser (remembered via local storage), never blocks the app itself.
 

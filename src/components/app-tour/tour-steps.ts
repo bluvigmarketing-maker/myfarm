@@ -3,25 +3,32 @@ export type TourCta = { label: string; href: string };
 export type TourStep = {
   title: string;
   text: string;
+  /** data-tour value of the real element to spotlight, if any exists on a reachable page. */
+  highlight?: string;
+  /** Path to navigate to before this step is shown (only if not already there). */
+  navigateTo?: string;
   ctas?: TourCta[];
 };
 
 export const FARMER_STEPS: TourStep[] = [
   {
     title: "Make your free account",
-    text: "First, sign up. It only takes a minute!",
+    text: "Tap “List Your Farm” up top to get started.",
+    highlight: "nav-list-farm",
+  },
+  {
+    title: "Fill in your details",
+    text: "Add your name, email, and a password. Then tap Sign Up.",
+    navigateTo: "/signup",
+    highlight: "signup-submit",
   },
   {
     title: "Say you're a farmer",
-    text: "In your dashboard, tap “Become a Model Farmer.” Add your WhatsApp number so visitors can reach you.",
+    text: "Once you're signed in, tap “Become a Model Farmer” on your dashboard. Add your WhatsApp number so visitors can reach you.",
   },
   {
-    title: "Add your farm",
-    text: "Give your farm a name and a few photos. Pick a category too, like School Farm or Family Farm.",
-  },
-  {
-    title: "Set your prices",
-    text: "Pick a price for a visit and a price for training. Flip your farm Open or Closed any time you like.",
+    title: "Add your farm & prices",
+    text: "Give your farm a name and a few photos. Set a price for a visit and a price for training.",
   },
   {
     title: "You're ready!",
@@ -33,15 +40,23 @@ export const FARMER_STEPS: TourStep[] = [
 export const LEARNER_STEPS: TourStep[] = [
   {
     title: "Find a farm",
-    text: "Tap “Find a Farm” to see farms near you. You can search by name or pick a category.",
+    text: "Tap “Find a Farm” up top to see what's out there.",
+    highlight: "nav-find-farm",
   },
   {
-    title: "Open a farm page",
-    text: "Click any farm to see its photos, videos, prices, and open hours.",
+    title: "Search & filter",
+    text: "Search by name, or pick a category like School Farm or Family Farm.",
+    navigateTo: "/farms",
+    highlight: "farms-search",
+  },
+  {
+    title: "Pick a farm",
+    text: "Tap any farm card to see its photos, videos, prices, and hours.",
+    highlight: "farms-results",
   },
   {
     title: "Book your visit",
-    text: "Tap “Book a Visit.” It opens WhatsApp with a message all ready to send!",
+    text: "On a farm's page, tap “Book a Visit.” It opens WhatsApp with a message all ready to send!",
   },
   {
     title: "Learn and have fun",
@@ -57,11 +72,14 @@ export const BOTH_STEPS: TourStep[] = [
   },
   {
     title: "List your farm",
-    text: "Sign up, add your farm, set your prices, and go Open when you're ready.",
+    text: "Tap “List Your Farm,” sign up, add your farm, and set your prices.",
+    highlight: "nav-list-farm",
   },
   {
     title: "Visit a farm",
-    text: "Browse farms, pick one you like, and book a visit on WhatsApp.",
+    text: "Search or filter by category, then pick a farm and book on WhatsApp.",
+    navigateTo: "/farms",
+    highlight: "farms-search",
   },
   {
     title: "Ready to start?",
