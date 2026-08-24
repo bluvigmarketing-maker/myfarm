@@ -154,6 +154,22 @@ rendering (e.g. `<Button render={<Link href="/farms" />}>`), but pass
 `nativeButton={false}` whenever the render target isn't a real `<button>` —
 otherwise Base UI logs an accessibility warning in dev.
 
+**Home hero background** (`src/components/hero-background.tsx`): five
+crossfading photos behind the hero text, swapped every 7s (`AnimatePresence`
+opacity fade, ~1.6s), picking a landscape or portrait image set at runtime
+based on `window.innerWidth < 768 || innerHeight > innerWidth` — landscape
+photos are wide farm-field shots, portrait photos are the same theme
+pre-cropped to 1080×1920 (assets in `public/hero/`). Overlay is a flat
+`bg-black/50` plus a subtle green top/bottom gradient (`from-green-950/60
+via-transparent to-green-950/25`) — deliberately a single flat scrim rather
+than a text-following vignette, since a uniform overlay held up as the most
+comfortable/least distracting option when tested against both a dark
+(cows) and a light (sheep) source photo. Respects
+`prefers-reduced-motion` (skips the crossfade). Text on this hero switches
+to the dark-hero treatment (white heading, `text-green-50` body, translucent
+white outline button) since the reference `PageHero` pattern's light-on-dark
+combo already existed elsewhere in the app.
+
 ---
 
 ## 5. Security & Trust Considerations
