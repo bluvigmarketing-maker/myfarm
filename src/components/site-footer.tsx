@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className="bg-green-950 text-green-100">
       <Container className="grid gap-8 py-12 sm:grid-cols-3">
         <div className="flex flex-col gap-3">
-          <span className="font-heading text-xl font-semibold text-white">FarmVisit</span>
+          <span className="font-heading text-xl font-semibold text-white">Shamba Spot</span>
           <p className="max-w-xs text-sm text-green-200">
             Learn farming the way it&apos;s always been taught: in the field.
             Discover farms open for training visits and agro-tourism.
@@ -41,7 +41,7 @@ export function SiteFooter() {
         </div>
       </Container>
       <div className="border-t border-green-800 py-4 text-center text-xs text-green-400">
-        © {new Date().getFullYear()} FarmVisit. All rights reserved.
+        © {new Date().getFullYear()} Shamba Spot. All rights reserved.
       </div>
     </footer>
   );

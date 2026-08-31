@@ -22,7 +22,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
       <Container className="flex items-center justify-between py-4">
         <Link href="/" className="font-heading text-xl font-semibold text-green-800">
-          FarmVisit
+          Shamba Spot
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-green-800/80 md:flex">
@@ -60,7 +60,7 @@ export function SiteHeader() {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right">
           <SheetHeader>
-            <SheetTitle>FarmVisit</SheetTitle>
+            <SheetTitle>Shamba Spot</SheetTitle>
           </SheetHeader>
           <nav className="flex flex-col gap-1 px-4">
             {NAV_LINKS.map((link) => (

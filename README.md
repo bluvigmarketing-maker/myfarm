@@ -1,4 +1,4 @@
-# FarmVisit
+# Shamba Spot
 
 A webapp connecting experienced farmers (who open their farms for training
 visits and agro-tourism) with visitors who want to learn or tour — booking

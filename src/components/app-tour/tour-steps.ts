@@ -67,7 +67,7 @@ export const LEARNER_STEPS: TourStep[] = [
 
 export const BOTH_STEPS: TourStep[] = [
   {
-    title: "Two ways to use FarmVisit",
+    title: "Two ways to use Shamba Spot",
     text: "You can list your own farm, or go visit other farms. You can even do both!",
   },
   {

@@ -26,7 +26,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="Our Story"
         title="Farmers teaching farmers"
-        description="FarmVisit connects experienced farmers with people who want to learn — in person, on real farms."
+        description="Shamba Spot connects experienced farmers with people who want to learn — in person, on real farms."
       />
 
       <Container className="flex flex-col gap-12 py-12">
@@ -35,7 +35,7 @@ export default function AboutPage() {
           <p className="max-w-2xl text-green-700">
             The best farming lessons don&apos;t come from a video. They come
             from standing in a field with someone who&apos;s grown food for
-            years. FarmVisit makes it easy to find those farmers, see what
+            years. Shamba Spot makes it easy to find those farmers, see what
             they offer, and book a visit — all without any paid apps or
             complicated tools.
           </p>

@@ -19,7 +19,7 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "FarmVisit — Learn from Fellow Farmers",
+  title: "Shamba Spot — Learn from Fellow Farmers",
   description:
     "Discover farms open for training visits and agro-tourism, book directly via WhatsApp, and shop farm-gate produce.",
 };

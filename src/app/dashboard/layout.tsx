@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
         <Container className="flex items-center justify-between py-4">
           <Link href="/dashboard" className="font-heading text-xl font-semibold text-green-800">
-            FarmVisit
+            Shamba Spot
           </Link>
           <form action={logout}>
             <Button type="submit" variant="ghost" className="text-green-800 hover:text-green-900">

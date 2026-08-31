@@ -9,7 +9,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { stepsForPath, type TourPath } from "./tour-steps";
 
-const STORAGE_KEY = "farmvisit_tour_seen";
+const STORAGE_KEY = "shamba_spot_tour_seen";
 const SPOTLIGHT_PADDING = 8;
 
 type Mode = "hidden" | "ask" | "playing";
@@ -133,7 +133,7 @@ export function AppTour() {
         <button
           type="button"
           onClick={openTour}
-          aria-label="Open the FarmVisit tour"
+          aria-label="Open the Shamba Spot tour"
           className="fixed bottom-4 left-4 z-40 flex items-center gap-2 rounded-full border border-brown-400/60 bg-white py-1.5 pr-4 pl-1.5 text-sm font-medium text-green-800 shadow-md transition-transform hover:-translate-y-0.5 hover:shadow-lg"
         >
           <Image

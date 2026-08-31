@@ -57,7 +57,7 @@ export default async function MarketPage({
       <PageHero
         eyebrow="Farm Shop"
         title="The Market"
-        description="Produce straight from the farms on FarmVisit, sold at farm price. Order right on WhatsApp."
+        description="Produce straight from the farms on Shamba Spot, sold at farm price. Order right on WhatsApp."
       />
 
       <Container className="flex flex-col gap-8 py-12">
