@@ -20,6 +20,23 @@ export const verifySession = cache(async () => {
   return user
 })
 
+export const verifyAdmin = cache(async () => {
+  const user = await verifySession()
+  const supabase = await createClient()
+
+  const { data } = await supabase
+    .from('users')
+    .select('is_admin')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  if (!data?.is_admin) {
+    redirect('/dashboard')
+  }
+
+  return user
+})
+
 export const getFarmerProfile = cache(async () => {
   const user = await verifySession()
   const supabase = await createClient()

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import { AppTour } from "@/components/app-tour/app-tour";
+import { TrackPageView } from "@/components/analytics/track-page-view";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         {children}
         <AppTour />
+        <TrackPageView />
       </body>
     </html>
   );

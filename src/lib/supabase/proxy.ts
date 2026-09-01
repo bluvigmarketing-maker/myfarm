@@ -32,8 +32,9 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
 
-  if (isDashboardRoute && !user) {
+  if ((isDashboardRoute || isAdminRoute) && !user) {
     const redirectUrl = new URL('/login', request.url)
     redirectUrl.searchParams.set('next', request.nextUrl.pathname)
     return NextResponse.redirect(redirectUrl)
